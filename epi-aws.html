@@ -124,8 +124,7 @@
             secretaccesskey: {type: "password",required:true},
         },
         label: function() {
-            // set node label to last 10 digits of access key
-            return this.credentials.accesskeyid ? "AWS (key: " + this.credentials.accesskeyid.substr(this.credentials.accesskeyid.length - 4) + ")": "AWS";
+            return this.name || "AWS";
         },
         exportable: false,
     });

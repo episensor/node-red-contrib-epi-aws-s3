@@ -69,17 +69,16 @@ module.exports = function(RED) {
         }
         var s3 = new AWS.S3({"region": node.region});
         node.on("input", function(msg) {
-            node.warn("Using access key: " + this.awsConfig.credentials.accesskeyid);
             var bucket = node.bucket || msg.bucket;
             if (bucket === "") {
-                node.warn("No bucket");
                 node.error(RED._("aws.error.no-bucket-specified"),msg);
+                node.status({fill:"red",shape:"dot",text:"aws.status.error"});
                 return;
             }
             var filename = node.filename || msg.filename;
             if (filename === "") {
-                node.warn("No filename");
                 node.error(RED._("aws.error.no-filename-specified"),msg);
+                node.status({fill:"red",shape:"dot",text:"aws.status.error"});
                 return;
             }
             msg.bucket = bucket;
@@ -90,8 +89,8 @@ module.exports = function(RED) {
                 Key: filename,
             }, function(err, data) {
                 if (err) {
-                    node.warn(err);
                     node.error(RED._("aws.error.download-failed",{err:err.toString()}),msg);
+                    node.status({fill:"red",shape:"dot",text:"aws.status.error"});
                     return;
                 } else {
                     msg.payload = data.Body;

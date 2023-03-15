@@ -28,5 +28,5 @@
     "type": "git",
     "url": "https://github.com/episensor/node-red-contrib-epi-aws-s3"
   },
-  "version": "0.0.1"
+  "version": "0.0.2"
 }

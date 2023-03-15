@@ -8,7 +8,7 @@
             "filename": "Filename",
             "region": "Region",
             "local": "Local Filename",
-            "keyid": "AccessKeyID",
+            "keyid": "Access Key ID",
             "secret": "Secret Access Key"
         },
         "placeholder": {
@@ -36,11 +36,11 @@
             "missing-credentials": "Missing AWS credentials"
         },
         "error": {
-            "failed-to-fetch": "failed to fetch S3 state: __err__",
+            "failed-to-fetch": "Failed to fetch S3 state: __err__",
             "no-bucket-specified": "No bucket specified",
             "no-filename-specified": "No filename specified",
-            "download-failed": "download failed: __err__",
-            "aws-s3-error": "AWS S3 error: __err__"
+            "download-failed": "Download failed: __err__",
+            "aws-s3-error": "Error: __err__"
         }
     }
 }
