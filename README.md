@@ -1,23 +1,134 @@
-node-red-contrib-epi-aws-s3
-=================
+# node-red-contrib-epi-aws-s3
 
-An EpiSensor <a href="http://nodered.org" target="_new">Node-RED</a> node to watch, send
-and receive files from an Amazon S3 bucket.
+An EpiSensor [Node-RED](http://nodered.org) node to download files from an Amazon S3 bucket.
 
-Install
--------
+## Install
 
-Run the following command in the root directory of your Node-RED install
+Run the following command in your Node-RED user directory (typically `~/.node-red`):
 
-        npm install node-red-contrib-epi-aws-s3
+```bash
+npm install node-red-contrib-epi-aws-s3
+```
 
-Usage
------
+## Features
 
-### Amazon S3 input node
+- Download files from Amazon S3 buckets
+- Progress tracking for large downloads
+- Automatic file size limit enforcement
+- Detailed error reporting
+- Support for all major AWS regions
+- Uses AWS SDK v3 for improved performance and security
 
-Downloads content from an Amazon S3 bucket. The bucket name can be specified in
-the node **bucket** property or in the `msg.bucket` property.
-The name of the file to download is taken from the node <b>filename</b> property
-or the `msg.filename` property. The downloaded content is sent as `msg.payload`
-property. If the download fails `msg.error` will contain an error object.
+## Prerequisites
+
+- Node.js 14 or later
+- Node-RED 3.0 or later
+- AWS account with appropriate S3 permissions
+
+## Configuration
+
+### AWS Credentials
+
+1. Sign up for [Amazon Web Services](http://aws.amazon.com/) if you haven't already
+2. Obtain your credentials using one of these methods:
+   - Go to your account name → Security Credentials → Access Keys
+   - Create an IAM user: IAM Console → Users → Add user → Attach S3 permissions
+
+The IAM user needs at least the following permissions:
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::your-bucket-name/*"
+            ]
+        }
+    ]
+}
+```
+
+### Node Configuration
+
+1. Add your AWS credentials in the configuration node
+2. Set the bucket name (or provide it in `msg.bucket`)
+3. Set the file path (or provide it in `msg.filename`)
+4. Select your AWS region
+5. Deploy and test
+
+## Usage
+
+### Basic Example
+
+```javascript
+msg.bucket = "my-bucket";
+msg.filename = "path/to/file.txt";
+return msg;
+```
+
+### Input
+
+- `msg.bucket` (string): Override the configured bucket name
+- `msg.filename` (string): Override the configured file path
+
+### Output
+
+- `msg.payload` (Buffer): The downloaded file content
+- `msg.error` (Error, optional): Error details if download fails
+
+### Status Indicators
+
+- Gray dot: Not configured
+- Blue dot: Downloading (with progress for large files)
+- Green dot: Ready/Completed
+- Red dot: Error
+
+## Limitations
+
+- Maximum file size: 100MB
+- Single file downloads only (no batch operations)
+- Download-only (no upload capability)
+
+## Error Handling
+
+The node provides detailed error messages for common issues:
+
+- Missing credentials
+- Invalid bucket names
+- File not found
+- Access denied
+- Network errors
+- Size limit exceeded
+
+## Testing
+
+Run the test suite:
+
+```bash
+npm test
+```
+
+## Support
+
+For issues and feature requests, please use the [GitHub issue tracker](https://github.com/episensor/node-red-contrib-epi-aws-s3/issues).
+
+## License
+
+Licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for details.
+
+## Version History
+
+- 0.1.0 (2025-01)
+  - Added progress tracking
+  - Added file size limits
+  - Improved error handling
+  - Updated to AWS SDK v3.511.0
+  - Added status indicators
+  - Improved documentation
+
+- 0.0.3
+  - Initial release with AWS SDK v3 support
