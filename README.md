@@ -106,11 +106,54 @@ The node provides detailed error messages for common issues:
 
 ## Testing
 
-Run the test suite:
+This package includes a comprehensive test suite to ensure reliability:
 
 ```bash
+# Run unit tests with Jest
 npm test
+
+# Run tests with coverage report
+npm run test:coverage
+
+# Run tests in watch mode during development
+npm run test:watch
+
+# Run the original Mocha tests
+npm run test:mocha
+
+# Test Node-RED compatibility
+npm run test:node-red
+
+# Check for security issues
+npm run security-check
+
+# Verify package configuration
+npm run verify-package
+
+# Run all pre-publish checks
+npm run pre-publish
 ```
+
+## Development
+
+### Prerequisites
+
+- Node.js 14 or later
+- Node-RED 3.0 or later for testing
+
+### Setup
+
+1. Clone the repository
+2. Install dependencies: `npm install`
+3. Run tests: `npm test`
+
+### Contributing
+
+1. Fork the repository
+2. Create your feature branch: `git checkout -b feature/my-new-feature`
+3. Commit your changes: `git commit -am 'Add some feature'`
+4. Push to the branch: `git push origin feature/my-new-feature`
+5. Submit a pull request
 
 ## Support
 
@@ -122,7 +165,14 @@ Licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for detai
 
 ## Version History
 
-- 0.1.0 (2025-01)
+- 0.2.0 (2024-03)
+  - Added comprehensive test suite
+  - Added pre-publish checks
+  - Added security scanning
+  - Added Node-RED compatibility testing
+  - Updated dependencies
+
+- 0.1.0 (2024-01)
   - Added progress tracking
   - Added file size limits
   - Improved error handling

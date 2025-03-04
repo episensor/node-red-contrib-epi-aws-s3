@@ -1,54 +1,63 @@
 {
   "name": "node-red-contrib-epi-aws-s3",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "EpiSensor node to download files from an Amazon S3 bucket (AWS SDK v3)",
   "author": {
-      "name": "EpiSensor",
-      "email": "info@episensor.com",
-      "url": "http://episensor.com"
+    "name": "EpiSensor",
+    "email": "info@episensor.com",
+    "url": "http://episensor.com"
   },
   "license": "Apache-2.0",
   "repository": {
-      "type": "git",
-      "url": "https://github.com/episensor/node-red-contrib-epi-aws-s3"
+    "type": "git",
+    "url": "https://github.com/episensor/node-red-contrib-epi-aws-s3"
   },
   "keywords": [
-      "episensor",
-      "node-red",
-      "aws",
-      "s3",
-      "amazon s3",
-      "storage"
+    "episensor",
+    "node-red",
+    "aws",
+    "s3",
+    "amazon s3",
+    "storage"
   ],
   "dependencies": {
-      "@aws-sdk/client-s3": "^3.511.0",
-      "minimatch": "^9.0.3"
+    "@aws-sdk/client-s3": "^3.511.0",
+    "minimatch": "^9.0.3"
   },
   "devDependencies": {
-      "mocha": "^10.2.0",
-      "node-red": "^3.1.0",
-      "node-red-node-test-helper": "^0.3.2",
-      "should": "^13.2.3",
-      "should-sinon": "0.0.6",
-      "sinon": "^17.0.1"
+    "express": "^4.18.3",
+    "jest": "^29.7.0",
+    "mocha": "^10.2.0",
+    "node-red": "^3.1.0",
+    "node-red-node-test-helper": "^0.3.2",
+    "should": "^13.2.3",
+    "should-sinon": "0.0.6",
+    "sinon": "^17.0.1"
   },
   "engines": {
-      "node": ">=14.0.0"
+    "node": ">=14.0.0"
   },
   "node-red": {
-      "nodes": {
-          "epi-aws-s3": "epi-aws.js"
-      }
+    "nodes": {
+      "epi-aws-s3": "epi-aws.js"
+    }
   },
   "scripts": {
-      "test": "mocha \"test/**/*_spec.js\"",
-      "test:watch": "mocha \"test/**/*_spec.js\" --watch"
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:mocha": "mocha \"test/**/*_spec.js\"",
+    "test:node-red": "node test/node-red-test.js",
+    "security-check": "node test/security-check.js",
+    "verify-package": "node test/verify-package.js",
+    "pre-publish": "node test/pre-publish.js",
+    "prepublishOnly": "npm run pre-publish"
   },
   "bugs": {
-      "url": "https://github.com/episensor/node-red-contrib-epi-aws-s3/issues"
+    "url": "https://github.com/episensor/node-red-contrib-epi-aws-s3/issues"
   },
   "homepage": "https://github.com/episensor/node-red-contrib-epi-aws-s3#readme",
   "publishConfig": {
-      "access": "public"
+    "access": "public"
   }
 }
