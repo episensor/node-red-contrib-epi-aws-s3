@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-epi-aws-s3",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "EpiSensor node to download files from an Amazon S3 bucket (AWS SDK v3)",
   "author": {
     "name": "EpiSensor",

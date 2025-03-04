@@ -165,6 +165,10 @@ Licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for detai
 
 ## Version History
 
+- 0.2.1 (2024-03)
+  - Removed GitHub workflow files
+  - Streamlined package structure
+
 - 0.2.0 (2024-03)
   - Added comprehensive test suite
   - Added pre-publish checks
