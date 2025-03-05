@@ -1,4 +1,4 @@
-# node-red-contrib-epi-aws-s3
+# @episensor/epi-aws-s3
 
 An EpiSensor [Node-RED](http://nodered.org) node to download files from an Amazon S3 bucket.
 
@@ -7,7 +7,7 @@ An EpiSensor [Node-RED](http://nodered.org) node to download files from an Amazo
 Run the following command in your Node-RED user directory (typically `~/.node-red`):
 
 ```bash
-npm install node-red-contrib-epi-aws-s3
+npm install @episensor/epi-aws-s3
 ```
 
 ## Features
@@ -157,7 +157,7 @@ npm run pre-publish
 
 ## Support
 
-For issues and feature requests, please use the [GitHub issue tracker](https://github.com/episensor/node-red-contrib-epi-aws-s3/issues).
+For issues and feature requests, please use the [GitHub issue tracker](https://github.com/episensor/epi-aws-s3/issues).
 
 ## License
 
