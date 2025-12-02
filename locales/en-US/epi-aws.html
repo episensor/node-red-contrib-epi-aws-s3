@@ -1,3 +1,7 @@
 <script type="text/x-red" data-help-name="epi-aws-s3">
-    <p>EpiSensor Amazon S3 input node. Downloads content from an Amazon S3 bucket. The bucket name can be specified in the node <b>bucket</b> property or in the <b>msg.bucket</b> property. The name of the file to download is taken from the node <b>filename</b> property or the <b>msg.filename</b> property. The downloaded content is sent as <b>msg.payload</b> property. If the download fails <b>msg.error</b> will contain an error object.</p>
+    <p>EpiSensor Amazon S3 download node. Downloads content from an Amazon S3 bucket. The bucket name can be specified in the node <b>bucket</b> property or in the <b>msg.bucket</b> property. The name of the file to download is taken from the node <b>filename</b> property or the <b>msg.filename</b> property. The downloaded content is sent as <b>msg.payload</b> (Buffer). If the download fails, <b>msg.error</b> will contain the error object and <b>msg.payload</b> will be null.</p>
+</script>
+
+<script type="text/x-red" data-help-name="epi-aws-s3-upload">
+    <p>EpiSensor Amazon S3 upload node. Uploads content to an Amazon S3 bucket. The bucket name can be specified in the node <b>bucket</b> property or in the <b>msg.bucket</b> property. The destination path is taken from the node <b>filename</b> property or the <b>msg.filename</b> property. The content to upload is taken from <b>msg.payload</b> (Buffer, string, or object). On success, <b>msg.payload</b> contains upload details including ETag. If the upload fails, <b>msg.error</b> will contain the error object.</p>
 </script>

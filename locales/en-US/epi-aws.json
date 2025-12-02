@@ -7,44 +7,58 @@
             "filename": "Filename",
             "region": "Region",
             "keyid": "Access Key ID",
-            "secret": "Secret Access Key"
+            "secret": "Secret Access Key",
+            "contentType": "Content Type",
+            "acl": "ACL"
         },
         "placeholder": {
             "bucket": "S3 bucket name",
             "name": "Node name",
-            "filename": "Path to file in bucket"
+            "filename": "Path to file in bucket",
+            "upload-filename": "Destination path in bucket",
+            "contentType": "Auto-detect from filename"
         },
         "tip": {
             "config1": "<p>To obtain AWS credentials, sign up to <a href='http://aws.amazon.com/'>Amazon Web Services</a>, then either:</p>",
             "config2": "<ul><li>Go to your account name and select 'Security Credentials', then click 'Access Keys (Access Key ID and Secret Access Key)' or</li><li>Select 'IAM' under 'Security, Identity, & Compliance' from the AWS console and create an IAM user with appropriate S3 permissions.</li></ul>",
-            "limits": "<p>Note: Maximum file size limit is 100MB. Larger files will trigger an error.</p>"
+            "download-limits": "<p>Note: Maximum download file size is 100MB. Larger files will trigger an error.</p>",
+            "upload-limits": "<p>Note: Maximum upload size is 5GB (S3 single PUT limit). Content type is auto-detected from filename if not specified.</p>"
         },
         "status": {
             "initializing": "initializing",
             "error": "error",
             "ready": "ready",
             "downloading": "downloading",
-            "checking-credentials": "checking credentials"
+            "uploading": "uploading",
+            "checking-credentials": "checking credentials",
+            "download-progress": "downloading __size__",
+            "upload-progress": "uploading __size__"
         },
         "warn": {
             "missing-credentials": "Missing AWS credentials",
-            "file-too-large": "File exceeds 100MB size limit",
+            "file-too-large": "File exceeds size limit",
             "invalid-bucket": "Invalid bucket name format"
         },
         "error": {
             "no-bucket-specified": "No bucket specified",
             "no-filename-specified": "No filename specified",
+            "no-payload-specified": "No payload specified for upload",
             "download-failed": "Download failed: __err__",
+            "upload-failed": "Upload failed: __err__",
             "initialization-failed": "Failed to initialize S3 client: __err__",
             "access-denied": "Access denied - check AWS credentials and permissions",
             "file-not-found": "File '__filename__' not found in bucket '__bucket__'",
+            "bucket-not-found": "Bucket '__bucket__' not found",
             "invalid-request": "Invalid request - check bucket name and file path",
             "network-error": "Network error occurred: __err__",
-            "size-limit-exceeded": "File size exceeds limit of 100MB"
+            "size-limit-exceeded": "File size exceeds limit of __size__MB",
+            "upload-size-limit-exceeded": "Upload size exceeds limit of __size__GB"
         },
         "info": {
             "download-progress": "Downloaded: __size__",
-            "download-complete": "Download complete"
+            "download-complete": "Download complete",
+            "upload-progress": "Uploaded: __size__",
+            "upload-complete": "Upload complete"
         }
     }
 }

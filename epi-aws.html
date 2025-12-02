@@ -1,5 +1,5 @@
 <!--
-  Modifications Copyright 2023 EpiSensor
+  Modifications Copyright 2023, 2024 EpiSensor
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@
   limitations under the License.
 -->
 
+<!-- S3 Download Node Template -->
 <script type="text/x-red" data-template-name="epi-aws-s3">
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="aws.label.name"></span></label>
@@ -52,25 +53,34 @@
             <option value="us-east-2">US East (Ohio) - us-east-2</option>
             <option value="us-west-1">US West (N. California) - us-west-1</option>
             <option value="us-west-2">US West (Oregon) - us-west-2</option>
+            <option value="af-south-1">Africa (Cape Town) - af-south-1</option>
             <option value="ap-east-1">Asia Pacific (Hong Kong) - ap-east-1</option>
             <option value="ap-south-1">Asia Pacific (Mumbai) - ap-south-1</option>
-            <option value="ap-northeast-3">Asia Pacific (Osaka) - ap-northeast-3</option>
+            <option value="ap-south-2">Asia Pacific (Hyderabad) - ap-south-2</option>
+            <option value="ap-northeast-1">Asia Pacific (Tokyo) - ap-northeast-1</option>
             <option value="ap-northeast-2">Asia Pacific (Seoul) - ap-northeast-2</option>
+            <option value="ap-northeast-3">Asia Pacific (Osaka) - ap-northeast-3</option>
             <option value="ap-southeast-1">Asia Pacific (Singapore) - ap-southeast-1</option>
             <option value="ap-southeast-2">Asia Pacific (Sydney) - ap-southeast-2</option>
-            <option value="ap-northeast-1">Asia Pacific (Tokyo) - ap-northeast-1</option>
+            <option value="ap-southeast-3">Asia Pacific (Jakarta) - ap-southeast-3</option>
+            <option value="ap-southeast-4">Asia Pacific (Melbourne) - ap-southeast-4</option>
             <option value="ca-central-1">Canada (Central) - ca-central-1</option>
             <option value="eu-central-1">Europe (Frankfurt) - eu-central-1</option>
+            <option value="eu-central-2">Europe (Zurich) - eu-central-2</option>
             <option value="eu-west-1">Europe (Ireland) - eu-west-1</option>
             <option value="eu-west-2">Europe (London) - eu-west-2</option>
             <option value="eu-west-3">Europe (Paris) - eu-west-3</option>
             <option value="eu-north-1">Europe (Stockholm) - eu-north-1</option>
+            <option value="eu-south-1">Europe (Milan) - eu-south-1</option>
+            <option value="eu-south-2">Europe (Spain) - eu-south-2</option>
+            <option value="il-central-1">Israel (Tel Aviv) - il-central-1</option>
             <option value="me-south-1">Middle East (Bahrain) - me-south-1</option>
-            <option value="sa-east-1">South America (São Paulo) - sa-east-1</option>
+            <option value="me-central-1">Middle East (UAE) - me-central-1</option>
+            <option value="sa-east-1">South America (Sao Paulo) - sa-east-1</option>
         </select>
     </div>
     <div class="form-tips">
-        <span data-i18n="[html]aws.tip.limits"></span>
+        <span data-i18n="[html]aws.tip.download-limits"></span>
     </div>
 </script>
 
@@ -83,7 +93,7 @@
             bucket: {value: ""},
             filename: {value: ""},
             region: {value: "us-east-1", required: true},
-            name: {value: "", required: true}
+            name: {value: ""}
         },
         credentials: {},
         inputs: 1,
@@ -91,14 +101,116 @@
         icon: "amazon.png",
         align: "right",
         label: function() {
-            return this.name || "s3";
+            return this.name || "s3 download";
         },
         labelStyle: function() {
             return this.name ? "node_label_italic" : "";
-        }
+        },
+        paletteLabel: "s3 download"
     });
 </script>
 
+<!-- S3 Upload Node Template -->
+<script type="text/x-red" data-template-name="epi-aws-s3-upload">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="aws.label.name"></span></label>
+        <input type="text" id="node-input-name" data-i18n="[placeholder]aws.placeholder.name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-aws"><i class="fa fa-user"></i> <span data-i18n="aws.label.aws"></span></label>
+        <input type="text" id="node-input-aws">
+    </div>
+    <div class="form-row">
+        <label for="node-input-bucket"><i class="fa fa-folder"></i> <span data-i18n="aws.label.bucket"></span></label>
+        <input type="text" id="node-input-bucket" data-i18n="[placeholder]aws.placeholder.bucket">
+    </div>
+    <div class="form-row node-input-filename">
+         <label for="node-input-filename"><i class="fa fa-file"></i> <span data-i18n="aws.label.filename"></span></label>
+         <input type="text" id="node-input-filename" data-i18n="[placeholder]aws.placeholder.upload-filename">
+    </div>
+    <div class="form-row">
+        <label for="node-input-contentType"><i class="fa fa-file-text-o"></i> <span data-i18n="aws.label.contentType"></span></label>
+        <input type="text" id="node-input-contentType" data-i18n="[placeholder]aws.placeholder.contentType">
+    </div>
+    <div class="form-row">
+        <label for="node-input-acl"><i class="fa fa-lock"></i> <span data-i18n="aws.label.acl"></span></label>
+        <select type="text" id="node-input-acl" style="width:70%;">
+            <option value="">Default (bucket policy)</option>
+            <option value="private">Private</option>
+            <option value="public-read">Public Read</option>
+            <option value="public-read-write">Public Read/Write</option>
+            <option value="authenticated-read">Authenticated Read</option>
+            <option value="bucket-owner-read">Bucket Owner Read</option>
+            <option value="bucket-owner-full-control">Bucket Owner Full Control</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-region"><i class="fa fa-globe"></i> <span data-i18n="aws.label.region"></span></label>
+        <select type="text" id="node-input-region" style="width:70%;">
+            <option value="us-east-1">US East (N. Virginia) - us-east-1</option>
+            <option value="us-east-2">US East (Ohio) - us-east-2</option>
+            <option value="us-west-1">US West (N. California) - us-west-1</option>
+            <option value="us-west-2">US West (Oregon) - us-west-2</option>
+            <option value="af-south-1">Africa (Cape Town) - af-south-1</option>
+            <option value="ap-east-1">Asia Pacific (Hong Kong) - ap-east-1</option>
+            <option value="ap-south-1">Asia Pacific (Mumbai) - ap-south-1</option>
+            <option value="ap-south-2">Asia Pacific (Hyderabad) - ap-south-2</option>
+            <option value="ap-northeast-1">Asia Pacific (Tokyo) - ap-northeast-1</option>
+            <option value="ap-northeast-2">Asia Pacific (Seoul) - ap-northeast-2</option>
+            <option value="ap-northeast-3">Asia Pacific (Osaka) - ap-northeast-3</option>
+            <option value="ap-southeast-1">Asia Pacific (Singapore) - ap-southeast-1</option>
+            <option value="ap-southeast-2">Asia Pacific (Sydney) - ap-southeast-2</option>
+            <option value="ap-southeast-3">Asia Pacific (Jakarta) - ap-southeast-3</option>
+            <option value="ap-southeast-4">Asia Pacific (Melbourne) - ap-southeast-4</option>
+            <option value="ca-central-1">Canada (Central) - ca-central-1</option>
+            <option value="eu-central-1">Europe (Frankfurt) - eu-central-1</option>
+            <option value="eu-central-2">Europe (Zurich) - eu-central-2</option>
+            <option value="eu-west-1">Europe (Ireland) - eu-west-1</option>
+            <option value="eu-west-2">Europe (London) - eu-west-2</option>
+            <option value="eu-west-3">Europe (Paris) - eu-west-3</option>
+            <option value="eu-north-1">Europe (Stockholm) - eu-north-1</option>
+            <option value="eu-south-1">Europe (Milan) - eu-south-1</option>
+            <option value="eu-south-2">Europe (Spain) - eu-south-2</option>
+            <option value="il-central-1">Israel (Tel Aviv) - il-central-1</option>
+            <option value="me-south-1">Middle East (Bahrain) - me-south-1</option>
+            <option value="me-central-1">Middle East (UAE) - me-central-1</option>
+            <option value="sa-east-1">South America (Sao Paulo) - sa-east-1</option>
+        </select>
+    </div>
+    <div class="form-tips">
+        <span data-i18n="[html]aws.tip.upload-limits"></span>
+    </div>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('epi-aws-s3-upload',{
+        category: 'episensor',
+        color: "#C0DEED",
+        defaults: {
+            aws: {type: "epi-aws-config", required: true},
+            bucket: {value: ""},
+            filename: {value: ""},
+            contentType: {value: ""},
+            acl: {value: ""},
+            region: {value: "us-east-1", required: true},
+            name: {value: ""}
+        },
+        credentials: {},
+        inputs: 1,
+        outputs: 1,
+        icon: "amazon.png",
+        align: "left",
+        label: function() {
+            return this.name || "s3 upload";
+        },
+        labelStyle: function() {
+            return this.name ? "node_label_italic" : "";
+        },
+        paletteLabel: "s3 upload"
+    });
+</script>
+
+<!-- AWS Config Node Template -->
 <script type="text/x-red" data-template-name="epi-aws-config">
     <div class="form-row">
         <label for="node-config-input-name"><i class="fa fa-tag"></i> <span data-i18n="aws.label.name"></span></label>
@@ -106,7 +218,7 @@
     </div>
     <div class="form-row">
         <label for="node-config-input-accesskeyid"><i class="fa fa-key"></i> <span data-i18n="aws.label.keyid"></span></label>
-        <input class="input-append-left" type="text" id="node-config-input-accesskeyid" style="width: 40%;">
+        <input class="input-append-left" type="password" id="node-config-input-accesskeyid" style="width: 40%;">
     </div>
     <div class="form-row">
         <label for="node-config-input-secretaccesskey"><i class="fa fa-lock"></i> <span data-i18n="aws.label.secret"></span></label>
@@ -122,10 +234,10 @@
     RED.nodes.registerType('epi-aws-config', {
         category: 'config',
         defaults: {
-            name: {value: "", required: true}
+            name: {value: ""}
         },
         credentials: {
-            accesskeyid: {type: "text", required: true},
+            accesskeyid: {type: "password", required: true},
             secretaccesskey: {type: "password", required: true}
         },
         label: function() {
@@ -138,14 +250,15 @@
     });
 </script>
 
+<!-- S3 Download Node Help -->
 <script type="text/x-red" data-help-name="epi-aws-s3">
-    <p>EpiSensor Amazon S3 input node. Downloads content from an Amazon S3 bucket.</p>
-    
+    <p>EpiSensor Amazon S3 download node. Downloads content from an Amazon S3 bucket.</p>
+
     <h3>Inputs</h3>
     <dl class="message-properties">
         <dt>bucket <span class="property-type">string</span></dt>
         <dd>The name of the S3 bucket to download from. Can be configured in the node or passed via <code>msg.bucket</code>.</dd>
-        
+
         <dt>filename <span class="property-type">string</span></dt>
         <dd>The name/path of the file to download. Can be configured in the node or passed via <code>msg.filename</code>.</dd>
     </dl>
@@ -153,19 +266,98 @@
     <h3>Outputs</h3>
     <dl class="message-properties">
         <dt>payload <span class="property-type">buffer</span></dt>
-        <dd>The downloaded file content.</dd>
-        
-        <dt>error <span class="property-type">object</span></dt>
-        <dd>If an error occurs, details will be provided here.</dd>
+        <dd>The downloaded file content as a Buffer. Will be <code>null</code> if an error occurred.</dd>
+
+        <dt>bucket <span class="property-type">string</span></dt>
+        <dd>The bucket name used for the download.</dd>
+
+        <dt>filename <span class="property-type">string</span></dt>
+        <dd>The filename/key used for the download.</dd>
+
+        <dt class="optional">error <span class="property-type">object</span></dt>
+        <dd>If an error occurs, the error object will be provided here.</dd>
     </dl>
 
     <h3>Details</h3>
     <p>Connects to Amazon S3 using provided credentials and downloads the specified file.</p>
     <p>The node will show download progress for larger files and enforces a 100MB size limit.</p>
-    
+    <p>On error, the message is still sent to the output with <code>msg.error</code> set and <code>msg.payload</code> as <code>null</code>,
+    allowing downstream nodes to handle errors appropriately.</p>
+
+    <h3>Status Indicators</h3>
+    <ul>
+        <li><strong>Blue dot</strong>: Download in progress (with MB count for large files)</li>
+        <li><strong>Red dot</strong>: Error occurred</li>
+        <li><strong>Red ring</strong>: Missing credentials or initialization error</li>
+        <li><strong>No status</strong>: Ready/completed successfully</li>
+    </ul>
+
     <h3>References</h3>
     <ul>
         <li>Files larger than 100MB will trigger an error</li>
+        <li>The node supports all major AWS regions</li>
+        <li>Uses AWS SDK v3 for improved performance and security</li>
+    </ul>
+</script>
+
+<!-- S3 Upload Node Help -->
+<script type="text/x-red" data-help-name="epi-aws-s3-upload">
+    <p>EpiSensor Amazon S3 upload node. Uploads content to an Amazon S3 bucket.</p>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">buffer | string | object</span></dt>
+        <dd>The content to upload. Buffers are uploaded directly. Strings are converted to UTF-8. Objects are JSON-stringified.</dd>
+
+        <dt>bucket <span class="property-type">string</span></dt>
+        <dd>The name of the S3 bucket to upload to. Can be configured in the node or passed via <code>msg.bucket</code>.</dd>
+
+        <dt>filename <span class="property-type">string</span></dt>
+        <dd>The destination path/key in S3. Can be configured in the node or passed via <code>msg.filename</code>.</dd>
+
+        <dt class="optional">contentType <span class="property-type">string</span></dt>
+        <dd>The MIME type of the content. Auto-detected from filename if not specified.</dd>
+
+        <dt class="optional">acl <span class="property-type">string</span></dt>
+        <dd>The access control list for the uploaded object (e.g., "private", "public-read").</dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">object</span></dt>
+        <dd>On success, contains <code>success</code>, <code>bucket</code>, <code>key</code>, <code>etag</code>, and optionally <code>versionId</code>.</dd>
+
+        <dt>bucket <span class="property-type">string</span></dt>
+        <dd>The bucket name used for the upload.</dd>
+
+        <dt>filename <span class="property-type">string</span></dt>
+        <dd>The filename/key used for the upload.</dd>
+
+        <dt class="optional">error <span class="property-type">object</span></dt>
+        <dd>If an error occurs, the error object will be provided here.</dd>
+    </dl>
+
+    <h3>Details</h3>
+    <p>Connects to Amazon S3 using provided credentials and uploads the payload to the specified location.</p>
+    <p>The content type is automatically detected from the filename extension if not explicitly provided.</p>
+    <p>Supports common MIME types including text, JSON, images, audio, video, and archives.</p>
+    <p>On error, the message is still sent to the output with <code>msg.error</code> set and <code>msg.payload</code> as <code>null</code>.</p>
+
+    <h3>Status Indicators</h3>
+    <ul>
+        <li><strong>Blue dot</strong>: Upload in progress</li>
+        <li><strong>Red dot</strong>: Error occurred</li>
+        <li><strong>Red ring</strong>: Missing credentials or initialization error</li>
+        <li><strong>No status</strong>: Ready/completed successfully</li>
+    </ul>
+
+    <h3>IAM Permissions</h3>
+    <p>The IAM user needs at least <code>s3:PutObject</code> permission on the target bucket.</p>
+
+    <h3>References</h3>
+    <ul>
+        <li>Maximum upload size is 5GB (S3 single PUT limit)</li>
+        <li>For larger files, consider using multipart upload</li>
         <li>The node supports all major AWS regions</li>
         <li>Uses AWS SDK v3 for improved performance and security</li>
     </ul>

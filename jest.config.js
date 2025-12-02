@@ -1,5 +1,5 @@
 /**
- * Jest configuration for node-red-contrib-epi-aws-s3
+ * Jest configuration for @episensor/epi-aws-s3
  */
 
 module.exports = {

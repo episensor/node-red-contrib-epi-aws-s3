@@ -176,7 +176,7 @@ function performCodeSecurityChecks() {
  * Main function
  */
 function main() {
-  console.log(`${colors.magenta}Running security checks for node-red-contrib-epi-aws-s3${colors.reset}`);
+  console.log(`${colors.magenta}Running security checks for @episensor/epi-aws-s3${colors.reset}`);
   
   let success = true;
   
