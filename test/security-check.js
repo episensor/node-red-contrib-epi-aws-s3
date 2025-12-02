@@ -48,36 +48,48 @@ function runCommand(command, options = {}) {
 }
 
 /**
- * Check for vulnerable dependencies
+ * Check for vulnerable dependencies (production only)
  */
 function checkVulnerableDependencies() {
-  console.log(`${colors.blue}Checking for vulnerable dependencies...${colors.reset}`);
-  
+  console.log(`${colors.blue}Checking for vulnerable production dependencies...${colors.reset}`);
+
   try {
-    const npmAudit = runCommand('npm audit --json', { silent: true, ignoreError: true });
+    // Only check production dependencies - dev dependencies don't affect published package
+    const npmAudit = runCommand('npm audit --omit=dev --json', { silent: true, ignoreError: true });
     const auditResult = JSON.parse(npmAudit);
-    
+
     if (auditResult.metadata && auditResult.metadata.vulnerabilities) {
       const vulns = auditResult.metadata.vulnerabilities;
       const totalVulns = vulns.critical + vulns.high + vulns.moderate + vulns.low;
-      
+
       if (totalVulns > 0) {
-        console.warn(`${colors.yellow}Security vulnerabilities found:${colors.reset}`);
+        console.warn(`${colors.yellow}Production security vulnerabilities found:${colors.reset}`);
         console.warn(`  Critical: ${vulns.critical}`);
         console.warn(`  High: ${vulns.high}`);
         console.warn(`  Moderate: ${vulns.moderate}`);
         console.warn(`  Low: ${vulns.low}`);
-        
+
         if (vulns.critical > 0 || vulns.high > 0) {
-          console.error(`${colors.red}Critical or high severity vulnerabilities found.${colors.reset}`);
+          console.error(`${colors.red}Critical or high severity vulnerabilities found in production dependencies.${colors.reset}`);
           console.error(`${colors.red}Run 'npm audit fix' to try to automatically fix these issues.${colors.reset}`);
           return false;
         }
       } else {
-        console.log(`${colors.green}No security vulnerabilities found${colors.reset}`);
+        console.log(`${colors.green}No security vulnerabilities found in production dependencies${colors.reset}`);
       }
     }
-    
+
+    // Also report dev vulnerabilities as info (but don't fail)
+    const devAudit = runCommand('npm audit --json', { silent: true, ignoreError: true });
+    const devAuditResult = JSON.parse(devAudit);
+    if (devAuditResult.metadata && devAuditResult.metadata.vulnerabilities) {
+      const devVulns = devAuditResult.metadata.vulnerabilities;
+      const totalDevVulns = devVulns.critical + devVulns.high + devVulns.moderate + devVulns.low;
+      if (totalDevVulns > 0) {
+        console.log(`${colors.cyan}Note: ${totalDevVulns} vulnerabilities in dev dependencies (not affecting published package)${colors.reset}`);
+      }
+    }
+
     return true;
   } catch (error) {
     console.error(`${colors.red}Error checking for vulnerable dependencies: ${error.message}${colors.reset}`);

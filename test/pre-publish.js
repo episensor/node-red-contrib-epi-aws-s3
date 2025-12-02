@@ -128,29 +128,41 @@ function runUnitTests() {
  */
 function runSecurityChecks() {
   console.log(`${colors.blue}Running security checks...${colors.reset}`);
-  
+
   try {
-    // Check for vulnerable dependencies
-    const npmAudit = runCommand('npm audit --json', { silent: true, ignoreError: true });
+    // Check for vulnerable production dependencies only
+    // Dev dependencies don't affect the published package
+    const npmAudit = runCommand('npm audit --omit=dev --json', { silent: true, ignoreError: true });
     const auditResult = JSON.parse(npmAudit);
-    
+
     if (auditResult.metadata && auditResult.metadata.vulnerabilities) {
       const vulns = auditResult.metadata.vulnerabilities;
       const totalVulns = vulns.critical + vulns.high + vulns.moderate + vulns.low;
-      
+
       if (totalVulns > 0) {
-        console.warn(`${colors.yellow}Security vulnerabilities found:${colors.reset}`);
+        console.warn(`${colors.yellow}Production security vulnerabilities found:${colors.reset}`);
         console.warn(`  Critical: ${vulns.critical}`);
         console.warn(`  High: ${vulns.high}`);
         console.warn(`  Moderate: ${vulns.moderate}`);
         console.warn(`  Low: ${vulns.low}`);
-        
+
         if (vulns.critical > 0 || vulns.high > 0) {
-          console.error(`${colors.red}Critical or high severity vulnerabilities found. Please fix before publishing.${colors.reset}`);
+          console.error(`${colors.red}Critical or high severity vulnerabilities found in production dependencies. Please fix before publishing.${colors.reset}`);
           process.exit(1);
         }
       } else {
-        console.log(`${colors.green}No security vulnerabilities found${colors.reset}`);
+        console.log(`${colors.green}No security vulnerabilities found in production dependencies${colors.reset}`);
+      }
+    }
+
+    // Report dev vulnerabilities as info (but don't fail)
+    const devAudit = runCommand('npm audit --json', { silent: true, ignoreError: true });
+    const devAuditResult = JSON.parse(devAudit);
+    if (devAuditResult.metadata && devAuditResult.metadata.vulnerabilities) {
+      const devVulns = devAuditResult.metadata.vulnerabilities;
+      const totalDevVulns = devVulns.critical + devVulns.high + devVulns.moderate + devVulns.low;
+      if (totalDevVulns > 0) {
+        console.log(`${colors.cyan}Note: ${totalDevVulns} vulnerabilities in dev dependencies (not affecting published package)${colors.reset}`);
       }
     }
     
